@@ -1,0 +1,117 @@
+<alfresco-config>
+
+	<!-- Document Library Custom Code config section -->
+	<config evaluator="string-compare" condition="DocLibCustom">
+		<!-- paramedit dependencies -->
+		<dependencies>
+			<js src="/components/documentlibrary/publishing-action.js" />
+		</dependencies>
+	</config>
+
+	<!-- Document Library Actions config section -->
+	<config evaluator="string-compare" condition="DocLibActions">
+		<!-- paramedit action -->
+		<actions>
+			<!-- Publish document -->
+         	<action id="document-publish" type="javascript" label="actions.document.publish">
+            	<param name="function">onActionPublish</param>
+            	<evaluator negate="true">evaluator.doclib.action.isLocked</evaluator>
+         	</action>	
+		</actions>
+
+		<actionGroups>
+			<actionGroup id="document-browse">
+				<action index="300" id="document-publish" />
+			</actionGroup>
+
+			<actionGroup id="document-details">
+				<action index="340" id="document-publish" />
+			</actionGroup>
+		</actionGroups>
+	</config>
+
+	<!-- Publishing Channels Form Config -->
+	<config evaluator="node-type" condition="flickr:DeliveryChannel">
+		<forms>
+			<form>
+				<field-visibility>
+					<show id="cm:name" />
+				</field-visibility>
+			</form>
+		</forms>
+	</config>
+
+	<config evaluator="node-type" condition="youtube:DeliveryChannel">
+		<forms>
+			<form>
+				<field-visibility>
+					<show id="cm:name" />
+				</field-visibility>
+			</form>
+		</forms>
+	</config>
+
+	<config evaluator="node-type" condition="slideshare:DeliveryChannel">
+		<forms>
+			<form>
+				<field-visibility>
+					<show id="cm:name" />
+				</field-visibility>
+			</form>
+		</forms>
+	</config>
+
+	<config evaluator="node-type" condition="facebook:DeliveryChannel">
+		<forms>
+			<form>
+				<field-visibility>
+					<show id="cm:name" />
+				</field-visibility>
+			</form>
+		</forms>
+	</config>
+
+	<config evaluator="node-type" condition="twitter:DeliveryChannel">
+		<forms>
+			<form>
+				<field-visibility>
+					<show id="cm:name" />
+				</field-visibility>
+			</form>
+		</forms>
+	</config>
+
+	<config evaluator="node-type" condition="linkedin:DeliveryChannel">
+		<forms>
+			<form>
+				<field-visibility>
+					<show id="cm:name" />
+				</field-visibility>
+			</form>
+		</forms>
+	</config>
+
+	<config evaluator="string-compare" condition="CSRFPolicy">
+		<!-- The first rule with a matching request will get its action invoked, 
+			the remaining rules will be ignored. -->
+		<filter>
+			<!-- Certain Repo webscripts should be allowed to pass without a token 
+				since they have no Share knowledge. TODO: Refactor the publishing code so 
+				that form that is posted to this URL is a Share webscript with the right 
+				tokens. -->
+			<rule>
+				<request>
+					<method>POST</method>
+					<path>/proxy/alfresco/api/publishing/channels/.+</path>
+				</request>
+				<action name="assertReferer">
+					<param name="referer">{referer}</param>
+				</action>
+				<action name="assertOrigin">
+					<param name="origin">{origin}</param>
+				</action>
+			</rule>
+		</filter>
+	</config>
+
+</alfresco-config>
